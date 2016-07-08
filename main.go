@@ -37,11 +37,8 @@ func (g *Grid) NumberOfPathsFromOrigin(p Point) int {
 
 func (g *Grid) NumberOfPathsFromPoint(visitedNodes []Point) int {
 
-	fmt.Println("Visited: ", visitedNodes)
-
 	if (len(visitedNodes) > 3) {
 		g.ValidPaths++
-		fmt.Println("Found one!")
 	}
 
 	currentPoint := visitedNodes[len(visitedNodes)-1];
@@ -66,6 +63,26 @@ func (g *Grid) NumberOfPathsFromPoint(visitedNodes []Point) int {
 		g.NumberOfPathsFromPoint(next)
 	}
 
+	if(currentPoint.canMoveUpRight(g, visitedNodes)){
+		next := append(visitedNodes, Point{currentPoint.X-1, currentPoint.Y+1});
+		g.NumberOfPathsFromPoint(next)
+	}
+
+	if(currentPoint.canMoveUpLeft(g, visitedNodes)){
+		next := append(visitedNodes, Point{currentPoint.X-1, currentPoint.Y-1});
+		g.NumberOfPathsFromPoint(next)
+	}
+
+	if(currentPoint.canMoveDownRight(g, visitedNodes)){
+		next := append(visitedNodes, Point{currentPoint.X+1, currentPoint.Y+1});
+		g.NumberOfPathsFromPoint(next)
+	}
+
+	if(currentPoint.canMoveDownLeft(g, visitedNodes)){
+		next := append(visitedNodes, Point{currentPoint.X+1, currentPoint.Y-1});
+		g.NumberOfPathsFromPoint(next)
+	}
+
 	return g.ValidPaths
 }
 
@@ -75,7 +92,7 @@ type Point struct{
 }
 
 func (p Point) canMoveRight(grid *Grid, visitedPoints []Point) bool {
-	if !(len(grid.Grid[p.X]) - 1 > p.Y) {
+	if grid.isRightWall(p) {
 		return false
 	}
 
@@ -85,7 +102,7 @@ func (p Point) canMoveRight(grid *Grid, visitedPoints []Point) bool {
 }
 
 func (p Point) canMoveLeft(grid *Grid, visitedPoints []Point) bool {
-	if !(0 < p.Y){
+	if grid.isLeftWall(p) {
 		return false;
 	}
 
@@ -95,7 +112,7 @@ func (p Point) canMoveLeft(grid *Grid, visitedPoints []Point) bool {
 }
 
 func (p Point) canMoveUp(grid *Grid, visitedPoints []Point) bool {
-	if !(0 < p.X){
+	if grid.isTopWall(p) {
 		return false
 	}
 
@@ -105,13 +122,86 @@ func (p Point) canMoveUp(grid *Grid, visitedPoints []Point) bool {
 }
 
 func (p Point) canMoveDown(grid *Grid, visitedPoints []Point) bool {
-	if !(len(grid.Grid) - 1 > p.X){
+	if grid.isBottomWall(p) {
 		return false
 	}
 
 	downNeighbor := p
 	downNeighbor.X++;
 	return !downNeighbor.WasVisited(visitedPoints);
+}
+
+func (p Point) canMoveUpRight(grid *Grid, visitedPoints []Point) bool {
+	if grid.isTopRightWallCorner(p) {
+		return false
+	}
+
+	upRightVisitor := p
+	upRightVisitor.X--
+	upRightVisitor.Y++
+	return !upRightVisitor.WasVisited(visitedPoints);
+}
+func (p Point) canMoveUpLeft(grid *Grid, visitedPoints []Point) bool {
+	if grid.isTopLeftWallCorner(p) {
+		return false
+	}
+
+	upLeftNeighbor := p
+	upLeftNeighbor.X--
+	upLeftNeighbor.Y--
+	return !upLeftNeighbor.WasVisited(visitedPoints);
+}
+func (p Point) canMoveDownRight(grid *Grid, visitedPoints []Point) bool {
+	if grid.isBottomRightWallCorner(p) {
+		return false;
+	}
+
+	downRightNeighbor := p
+	downRightNeighbor.X++
+	downRightNeighbor.Y++
+	return !downRightNeighbor.WasVisited(visitedPoints);
+}
+func (p Point) canMoveDownLeft(grid *Grid, visitedPoints []Point) bool {
+	if grid.isBottomLeftWallCorner(p) {
+		return false
+	}
+
+	downLeftNeighbor := p
+	downLeftNeighbor.X++
+	downLeftNeighbor.Y--
+	return !downLeftNeighbor.WasVisited(visitedPoints);
+}
+
+func (g *Grid) isLeftWall(p Point) bool {
+	return !(p.Y > 0)
+}
+
+func (g *Grid) isRightWall(p Point) bool {
+	return !(len(g.Grid[p.X]) - 1 > p.Y)
+}
+
+func (g *Grid) isTopWall(p Point) bool {
+	return !(p.X > 0)
+}
+
+func (g *Grid) isBottomWall(p Point) bool { // TODO Make p a pointer
+	return !(len(g.Grid) - 1 > p.X)
+}
+
+func (g *Grid) isTopRightWallCorner(p Point) bool {
+	return g.isRightWall(p) || g.isTopWall(p)
+}
+
+func (g *Grid) isTopLeftWallCorner(p Point) bool {
+	return g.isLeftWall(p) || g.isTopWall(p)
+}
+
+func (g *Grid) isBottomRightWallCorner(p Point) bool {
+	return g.isRightWall(p) || g.isBottomWall(p)
+}
+
+func (g *Grid) isBottomLeftWallCorner(p Point) bool {
+	return g.isLeftWall(p) || g.isBottomWall(p)
 }
 
 func (p *Point) WasVisited(visitedPoints []Point) bool {
