@@ -2,7 +2,7 @@ package main
 import "fmt"
 
 func main() {
-	myGrid := NewGrid(5,5);
+	myGrid := NewGrid(3,3);
 
 	startingPoint := Point{0, 0};
 	fmt.Println(myGrid.NumberOfPathsFromOrigin(startingPoint))
@@ -78,33 +78,56 @@ func (g *Grid) NumberOfPathsFromPoint(visitedNodes []Point, p Point) int {
 
 	return g.ValidPaths
 }
+//
+//func (p *Point) canMoveTopRight(grid *Grid, visitedPoints []Point) bool{
+//	if !(len(grid.Grid[p.X]) - 1 > p.Y && 0 < p.X) { // If it's on top or right edges you cant move
+//		return false
+//	}
+//
+//	topRightNeighbor := p
+//	topRightNeighbor.Y++;
+//	topRightNeighbor.X--;
+//	return !topRightNeighbor.WasVisited(visitedPoints);
+//}
 
 func (g *Grid) canMoveRight(visitedPoints []Point, currentPoint Point) bool {
-	neighborNode := currentPoint
-	neighborNode.Y++;
+	if !(len(g.Grid[currentPoint.X]) - 1 > currentPoint.Y) {
+		return false
+	}
 
-	return len(g.Grid[currentPoint.X]) - 1 > currentPoint.Y && !neighborNode.IsVisited(visitedPoints);
+	rightNeighbor := currentPoint
+	rightNeighbor.Y++;
+	return !rightNeighbor.WasVisited(visitedPoints)
 }
 
 func (g *Grid) canMoveLeft(visitedPoints []Point, currentPoint Point) bool {
-	neighborNode := currentPoint
-	neighborNode.Y--;
+	if !(0 < currentPoint.Y){
+		return false;
+	}
 
-	return 0 < currentPoint.Y && !neighborNode.IsVisited(visitedPoints);
+	leftNeighbor := currentPoint
+	leftNeighbor.Y--;
+	return !leftNeighbor.WasVisited(visitedPoints);
 }
 
 func (g *Grid) canMoveUp(visitedPoints []Point, currentPoint Point) bool {
-	neighborNode := currentPoint
-	neighborNode.X--;
+	if !(0 < currentPoint.X){
+		return false
+	}
 
-	return 0 < currentPoint.X && !neighborNode.IsVisited(visitedPoints);
+	upNeighbor := currentPoint
+	upNeighbor.X--;
+	return !upNeighbor.WasVisited(visitedPoints);
 }
 
 func (g *Grid) canMoveDown(visitedPoints []Point, currentPoint Point) bool {
-	neighborNode := currentPoint
-	neighborNode.X++;
+	if !(len(g.Grid) - 1 > currentPoint.X){
+		return false
+	}
 
-	return len(g.Grid) - 1 > currentPoint.X && !neighborNode.IsVisited(visitedPoints);
+	downNeighbor := currentPoint
+	downNeighbor.X++;
+	return !downNeighbor.WasVisited(visitedPoints);
 }
 
 ///////
@@ -114,7 +137,7 @@ type Point struct{
 	Y int
 }
 
-func (p *Point) IsVisited(visitedPoints []Point) bool {
+func (p *Point) WasVisited(visitedPoints []Point) bool {
 	for _, visitedPoint := range visitedPoints {
 		if p.X == visitedPoint.X && p.Y == visitedPoint.Y{
 			return true
