@@ -2,7 +2,7 @@ package main
 import "fmt"
 
 func main() {
-	myGrid := NewGrid(4,4);
+	myGrid := NewGrid(3,3);
 
 	startingPoint := Point{0, 0};
 	fmt.Println(myGrid.NumberOfPathsFromOrigin(startingPoint))
@@ -30,12 +30,12 @@ func (g *Grid) NumberOfPathsFromOrigin(p Point) int {
 	g.ValidPaths = 0;
 
 	startingVisitedNode := []Point{p}
-	total += g.NumberOfPathsFromPoint(startingVisitedNode, p)
+	total += g.NumberOfPathsFromPoint(startingVisitedNode)
 
 	return total;
 }
 
-func (g *Grid) NumberOfPathsFromPoint(visitedNodes []Point, p Point) int {
+func (g *Grid) NumberOfPathsFromPoint(visitedNodes []Point) int {
 
 	fmt.Println("Visited: ", visitedNodes)
 
@@ -44,36 +44,26 @@ func (g *Grid) NumberOfPathsFromPoint(visitedNodes []Point, p Point) int {
 		fmt.Println("Found one!")
 	}
 
-	if(p.canMoveRight(g, visitedNodes)) {
-		pNext := p;
-		pNext.Y++
-		next := append(visitedNodes, pNext);
+	currentPoint := visitedNodes[len(visitedNodes)-1];
 
-		g.NumberOfPathsFromPoint(next, pNext)
+	if(currentPoint.canMoveRight(g, visitedNodes)) {
+		next := append(visitedNodes, Point{currentPoint.X, currentPoint.Y+1});
+		g.NumberOfPathsFromPoint(next)
 	}
 
-	if(p.canMoveLeft(g, visitedNodes)) {
-		pNext := p;
-		pNext.Y--
-		next := append(visitedNodes, pNext);
-
-		g.NumberOfPathsFromPoint(next, pNext)
+	if(currentPoint.canMoveLeft(g, visitedNodes)) {
+		next := append(visitedNodes, Point{currentPoint.X, currentPoint.Y-1});
+		g.NumberOfPathsFromPoint(next)
 	}
 
-	if(p.canMoveUp(g, visitedNodes)) {
-		pNext := p;
-		pNext.X--
-		next := append(visitedNodes, pNext);
-
-		g.NumberOfPathsFromPoint(next, pNext)
+	if(currentPoint.canMoveUp(g, visitedNodes)) {
+		next := append(visitedNodes, Point{currentPoint.X-1, currentPoint.Y});
+		g.NumberOfPathsFromPoint(next)
 	}
 
-	if(p.canMoveDown(g, visitedNodes)) {
-		pNext := p;
-		pNext.X++
-		next := append(visitedNodes, pNext);
-
-		g.NumberOfPathsFromPoint(next, pNext)
+	if(currentPoint.canMoveDown(g, visitedNodes)) {
+		next := append(visitedNodes, Point{currentPoint.X+1, currentPoint.Y});
+		g.NumberOfPathsFromPoint(next)
 	}
 
 	return g.ValidPaths
