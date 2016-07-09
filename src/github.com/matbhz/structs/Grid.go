@@ -1,5 +1,7 @@
 package GridCalculator
 
+import "fmt"
+
 type Grid struct {
     Grid [][]*Point
     ValidPaths int;
@@ -115,4 +117,15 @@ func (g *Grid) isBottomRightWallCorner(p Point) bool {
 
 func (g *Grid) isBottomLeftWallCorner(p Point) bool {
     return g.isLeftWall(p) || g.isBottomWall(p)
+}
+
+func (g *Grid) Rows() int {
+    return len(g.Grid)
+}
+
+func (g *Grid) Columns(rowNumber int) int {
+    if rowNumber > len(g.Grid){
+        panic(fmt.Sprintf("Grid only has", rowNumber, len(g.Grid), "rows"))
+    }
+    return len(g.Grid[rowNumber])
 }
