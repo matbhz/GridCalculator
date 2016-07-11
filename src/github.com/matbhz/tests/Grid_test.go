@@ -79,14 +79,8 @@ func TestGrid(t *testing.T) {
     actual = testGrid.NumberOfPathsFromPoint(Point{0,0})
     assert(expected, actual, t)
 
-
     // Zero grid
-    testGrid = NewGrid(0, 0)
-//    actual = testGrid.NumberOfPathsFromPoint(Point{0,0}) // Panics for having no points
-
-
-
-
+//    testGrid = NewGrid(0, 0) // Panics for having no points
 }
 
 func assert(expected, actual int, t *testing.T) {

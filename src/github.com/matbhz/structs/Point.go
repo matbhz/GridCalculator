@@ -12,7 +12,7 @@ func (p Point) canMoveRight(grid *Grid, visitedPoints []Point) bool {
 
     rightNeighbor := p
     rightNeighbor.Y++;
-    return !rightNeighbor.WasVisited(visitedPoints)
+    return !rightNeighbor.wasVisited(visitedPoints)
 }
 
 func (p Point) canMoveLeft(grid *Grid, visitedPoints []Point) bool {
@@ -22,7 +22,7 @@ func (p Point) canMoveLeft(grid *Grid, visitedPoints []Point) bool {
 
     leftNeighbor := p
     leftNeighbor.Y--;
-    return !leftNeighbor.WasVisited(visitedPoints);
+    return !leftNeighbor.wasVisited(visitedPoints);
 }
 
 func (p Point) canMoveUp(grid *Grid, visitedPoints []Point) bool {
@@ -32,7 +32,7 @@ func (p Point) canMoveUp(grid *Grid, visitedPoints []Point) bool {
 
     upNeighbor := p
     upNeighbor.X--;
-    return !upNeighbor.WasVisited(visitedPoints);
+    return !upNeighbor.wasVisited(visitedPoints);
 }
 
 func (p Point) canMoveDown(grid *Grid, visitedPoints []Point) bool {
@@ -42,7 +42,7 @@ func (p Point) canMoveDown(grid *Grid, visitedPoints []Point) bool {
 
     downNeighbor := p
     downNeighbor.X++;
-    return !downNeighbor.WasVisited(visitedPoints);
+    return !downNeighbor.wasVisited(visitedPoints);
 }
 
 func (p Point) canMoveUpRight(grid *Grid, visitedPoints []Point) bool {
@@ -53,7 +53,7 @@ func (p Point) canMoveUpRight(grid *Grid, visitedPoints []Point) bool {
     upRightVisitor := p
     upRightVisitor.X--
     upRightVisitor.Y++
-    return !upRightVisitor.WasVisited(visitedPoints);
+    return !upRightVisitor.wasVisited(visitedPoints);
 }
 
 func (p Point) canMoveUpLeft(grid *Grid, visitedPoints []Point) bool {
@@ -64,7 +64,7 @@ func (p Point) canMoveUpLeft(grid *Grid, visitedPoints []Point) bool {
     upLeftNeighbor := p
     upLeftNeighbor.X--
     upLeftNeighbor.Y--
-    return !upLeftNeighbor.WasVisited(visitedPoints);
+    return !upLeftNeighbor.wasVisited(visitedPoints);
 }
 
 func (p Point) canMoveDownRight(grid *Grid, visitedPoints []Point) bool {
@@ -75,7 +75,7 @@ func (p Point) canMoveDownRight(grid *Grid, visitedPoints []Point) bool {
     downRightNeighbor := p
     downRightNeighbor.X++
     downRightNeighbor.Y++
-    return !downRightNeighbor.WasVisited(visitedPoints);
+    return !downRightNeighbor.wasVisited(visitedPoints);
 }
 
 func (p Point) canMoveDownLeft(grid *Grid, visitedPoints []Point) bool {
@@ -86,10 +86,10 @@ func (p Point) canMoveDownLeft(grid *Grid, visitedPoints []Point) bool {
     downLeftNeighbor := p
     downLeftNeighbor.X++
     downLeftNeighbor.Y--
-    return !downLeftNeighbor.WasVisited(visitedPoints);
+    return !downLeftNeighbor.wasVisited(visitedPoints);
 }
 
-func (p *Point) WasVisited(visitedPoints []Point) bool {
+func (p *Point) wasVisited(visitedPoints []Point) bool {
     for _, visitedPoint := range visitedPoints {
         if p.X == visitedPoint.X && p.Y == visitedPoint.Y{
             return true
