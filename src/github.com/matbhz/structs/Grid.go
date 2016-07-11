@@ -9,6 +9,10 @@ type Grid struct {
 
 func NewGrid(rows, columns int) *Grid {
 
+    if(rows <= 0 || columns <= 0) {
+        panic("A grid must have at least 1 row and 1 column")
+    }
+
     grid := [][]*Point{}
 
     for i := 0; i < rows; i++ {
@@ -22,8 +26,8 @@ func NewGrid(rows, columns int) *Grid {
 func (g *Grid) NumberOfPathsFromAllPoints() int {
     total := 0
 
-    for i := 0; i < len(g.Grid); i++ {
-        for j := 0; j < len(g.Grid); j++ {
+    for i := 0; i < g.Rows(); i++ {
+        for j := 0; j < g.Columns(i); j++ {
             total += g.NumberOfPathsFromPoint(Point{i, j})
         }
     }
@@ -32,6 +36,11 @@ func (g *Grid) NumberOfPathsFromAllPoints() int {
 }
 
 func (g *Grid) NumberOfPathsFromPoint(p Point) int {
+
+    if(p.X > g.Rows() || p.Y > g.Columns(p.X) || p.X < 0 || p.Y < 0){
+        panic("Invalid point")
+    }
+
     startingVisitedNodes := []Point{p}
     g.ValidPaths = 0
     return g.NumberOfPaths(startingVisitedNodes);
