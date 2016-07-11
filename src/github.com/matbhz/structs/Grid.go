@@ -23,6 +23,8 @@ func NewGrid(rows, columns int) *Grid {
     return &Grid{Grid: grid}
 }
 
+
+
 func (g *Grid) NumberOfPathsFromAllPoints() int {
     total := 0
 
@@ -96,35 +98,35 @@ func (g *Grid) NumberOfPaths(visitedNodes []Point) int {
     return g.ValidPaths
 }
 
-func (g *Grid) isLeftWall(p Point) bool {
+func (g *Grid) isLeftWall(p *Point) bool {
     return !(p.Y > 0)
 }
 
-func (g *Grid) isRightWall(p Point) bool {
+func (g *Grid) isRightWall(p *Point) bool {
     return !(len(g.Grid[p.X]) - 1 > p.Y)
 }
 
-func (g *Grid) isTopWall(p Point) bool {
+func (g *Grid) isTopWall(p *Point) bool {
     return !(p.X > 0)
 }
 
-func (g *Grid) isBottomWall(p Point) bool { // TODO Make p a pointer
+func (g *Grid) isBottomWall(p *Point) bool { // TODO Make p a pointer
     return !(len(g.Grid) - 1 > p.X)
 }
 
-func (g *Grid) isTopRightWallCorner(p Point) bool {
+func (g *Grid) isTopRightWallCorner(p *Point) bool {
     return g.isRightWall(p) || g.isTopWall(p)
 }
 
-func (g *Grid) isTopLeftWallCorner(p Point) bool {
+func (g *Grid) isTopLeftWallCorner(p *Point) bool {
     return g.isLeftWall(p) || g.isTopWall(p)
 }
 
-func (g *Grid) isBottomRightWallCorner(p Point) bool {
+func (g *Grid) isBottomRightWallCorner(p *Point) bool {
     return g.isRightWall(p) || g.isBottomWall(p)
 }
 
-func (g *Grid) isBottomLeftWallCorner(p Point) bool {
+func (g *Grid) isBottomLeftWallCorner(p *Point) bool {
     return g.isLeftWall(p) || g.isBottomWall(p)
 }
 
