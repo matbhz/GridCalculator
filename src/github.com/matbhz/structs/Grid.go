@@ -142,7 +142,7 @@ func (g *Grid) isTopWall(p *Point) bool {
     return !(p.X > 0)
 }
 
-func (g *Grid) isBottomWall(p *Point) bool { // TODO Make p a pointer
+func (g *Grid) isBottomWall(p *Point) bool {
     return !(len(g.Grid) - 1 > p.X)
 }
 
