@@ -8,8 +8,12 @@ func main() {
 
 	startingPoint := Point{0, 0};
     fmt.Println("Example from point", startingPoint)
+
 	fmt.Println("Total possibilities:", myGrid.NumberOfPathsFromPoint(startingPoint))
     fmt.Println()
     fmt.Println("Example from all points")
     fmt.Println("Total possibilities:", myGrid.NumberOfPathsFromAllPoints())
+    fmt.Println()
+    fmt.Println("Example from all points (parallel)")
+    fmt.Println("Total possibilities:", myGrid.NumberOfPathsFromAllPointsParallel())
 }

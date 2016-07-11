@@ -1,10 +1,12 @@
 package GridCalculator
 
-import "fmt"
+import (
+    "fmt"
+    "sync"
+)
 
 type Grid struct {
     Grid [][]*Point
-    ValidPaths int;
 }
 
 func NewGrid(rows, columns int) *Grid {
@@ -23,7 +25,35 @@ func NewGrid(rows, columns int) *Grid {
     return &Grid{Grid: grid}
 }
 
+func (g* Grid) NumberOfPathsFromAllPointsParallel() int {
 
+    goRoutines := g.Rows() * g.Columns(0)
+    subtotalsChan := make(chan int, goRoutines)
+
+    var wg sync.WaitGroup
+    wg.Add(goRoutines) // TODO: Currently only working for rectangular Grids
+
+    for i := 0; i < g.Rows(); i++ {
+        for j := 0; j < g.Columns(i); j++ {
+            go func(x, y int){
+                defer wg.Done()
+                total := g.NumberOfPathsFromPoint(Point{x, y})
+                subtotalsChan <- total
+            }(i, j)
+        }
+    }
+
+    wg.Wait()
+    close(subtotalsChan)
+
+    total := 0
+    for subtotal := range subtotalsChan{
+        total += subtotal
+    }
+
+    return total
+
+}
 
 func (g *Grid) NumberOfPathsFromAllPoints() int {
     total := 0
@@ -44,58 +74,60 @@ func (g *Grid) NumberOfPathsFromPoint(p Point) int {
     }
 
     startingVisitedNodes := []Point{p}
-    g.ValidPaths = 0
     return g.NumberOfPaths(startingVisitedNodes);
 }
 
 func (g *Grid) NumberOfPaths(visitedNodes []Point) int {
+
+    validPaths := 0
+
     if (len(visitedNodes) > 3) {
-        g.ValidPaths++
+        validPaths++
     }
 
     currentPoint := visitedNodes[len(visitedNodes)-1];
 
     if(currentPoint.canMoveRight(g, visitedNodes)) {
         next := append(visitedNodes, Point{currentPoint.X, currentPoint.Y+1});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveLeft(g, visitedNodes)) {
         next := append(visitedNodes, Point{currentPoint.X, currentPoint.Y-1});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveUp(g, visitedNodes)) {
         next := append(visitedNodes, Point{currentPoint.X-1, currentPoint.Y});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveDown(g, visitedNodes)) {
         next := append(visitedNodes, Point{currentPoint.X+1, currentPoint.Y});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveUpRight(g, visitedNodes)){
         next := append(visitedNodes, Point{currentPoint.X-1, currentPoint.Y+1});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveUpLeft(g, visitedNodes)){
         next := append(visitedNodes, Point{currentPoint.X-1, currentPoint.Y-1});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveDownRight(g, visitedNodes)){
         next := append(visitedNodes, Point{currentPoint.X+1, currentPoint.Y+1});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
     if(currentPoint.canMoveDownLeft(g, visitedNodes)){
         next := append(visitedNodes, Point{currentPoint.X+1, currentPoint.Y-1});
-        g.NumberOfPaths(next)
+        validPaths += g.NumberOfPaths(next)
     }
 
-    return g.ValidPaths
+    return validPaths
 }
 
 func (g *Grid) isLeftWall(p *Point) bool {
